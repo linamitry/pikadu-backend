@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.Generated;
@@ -18,6 +19,7 @@ public class User {
     @Id
     public long id;
 
+    @Indexed(name="email", unique = true)
     public String email;
     public String password;
     public String displayName;
