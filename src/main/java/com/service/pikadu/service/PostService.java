@@ -9,7 +9,6 @@ import lombok.var;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +22,13 @@ public class PostService {
     private final ModelMapper mapper;
 
     public Page<PostResponse> getAllPosts(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        var paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         var result = postRepository.findAll(paging);
         return result.map(this::convertToDto);
     }
 
-    public Post createPost(CreatePostRequest post) {
-        return postRepository.save(convertToEntity(post));
+    public Post createPost(CreatePostRequest postDto) {
+        return postRepository.save(convertToEntity(postDto));
     }
 
     private PostResponse convertToDto(Post entity) {
@@ -37,7 +36,6 @@ public class PostService {
     }
 
     private Post convertToEntity(CreatePostRequest postDto) {
-        System.out.println(mapper.map(postDto, Post.class));
         return mapper.map(postDto, Post.class);
     }
 }
