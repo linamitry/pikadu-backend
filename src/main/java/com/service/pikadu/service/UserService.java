@@ -3,9 +3,7 @@ package com.service.pikadu.service;
 import com.service.pikadu.model.User;
 import com.service.pikadu.repository.UserRepository;
 import com.service.pikadu.request.LoginRequest;
-import com.service.pikadu.request.RegistrationRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,15 +12,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final SequenceGeneratorService sequenceGenerator;
 
-    public Optional<User> login(LoginRequest request) {
-        return repository.findUserByEmailAndPassword(request.email, request.password);
+    public Optional<User> login(LoginRequest user) {
+        return repository.findUserByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 
-    public User registration(RegistrationRequest request) {
-        var user = new User(request.email, request.password, request.displayName);
-        user.setId(sequenceGenerator.generateSequence(User.SEQUENCE_NAME));
+    public User registration(User user) {
         return repository.save(user);
     }
 
@@ -30,4 +25,7 @@ public class UserService {
         repository.deleteAll();
     }
 
+    public Optional<User> findById(Long id) {
+        return repository.findById(id);
+    }
 }

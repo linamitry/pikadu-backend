@@ -1,37 +1,35 @@
 package com.service.pikadu.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 
-import javax.annotation.Generated;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "users")
 @Data
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    @Transient
-    public static final String SEQUENCE_NAME = "users_sequence";
-
-    @JsonIgnore
     @Id
-    public long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(hidden = true)
+    private long id;
+    @ApiModelProperty(hidden = true)
+    @OneToMany(mappedBy = "author")
+    private Collection<Post> posts;
+    @Column(name = "email", unique = true)
+    private String email;
+    private String password;
+    private String displayName;
+    private String photo;
 
-    @Indexed(name="email", unique = true)
-    public String email;
-    public String password;
-    public String displayName;
-
-
-    public User() {
-    }
-
-    public User(String email, String password, String displayName) {
-        this.email = email;
-        this.password = password;
-        this.displayName = displayName;
+    public User(long id) {
+        this.id = id;
     }
 
     @Override
